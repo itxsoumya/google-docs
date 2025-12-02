@@ -89,6 +89,9 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.2.8
         version: 1.2.8(@types/react-dom@19.2.3(@types/react@19.2.5))(@types/react@19.2.5)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@tiptap/extension-image':
+        specifier: ^3.11.1
+        version: 3.11.1(@tiptap/core@3.11.1(@tiptap/pm@3.11.1))
       '@tiptap/extension-list':
         specifier: ^3.11.1
         version: 3.11.1(@tiptap/core@3.11.1(@tiptap/pm@3.11.1))(@tiptap/pm@3.11.1)
@@ -161,6 +164,9 @@ importers:
       zod:
         specifier: ^4.1.12
         version: 4.1.12
+      zustand:
+        specifier: ^5.0.9
+        version: 5.0.9(@types/react@19.2.5)(react@19.2.0)(use-sync-external-store@1.6.0(react@19.2.0))
     devDependencies:
       '@tailwindcss/postcss':
         specifier: ^4
@@ -1396,6 +1402,11 @@ packages:
     peerDependencies:
       '@tiptap/core': ^3.11.1
       '@tiptap/pm': ^3.11.1
+
+  '@tiptap/extension-image@3.11.1':
+    resolution: {integrity: sha512-lI+FyyHavUXHmDKxvSAdqGAvaYtVesAxHckeA60ZjZu9fBkUnVWHD8uR0TStX7EdOIRBWpzYrG7dDT4EkFVjTA==}
+    peerDependencies:
+      '@tiptap/core': ^3.11.1
 
   '@tiptap/extension-italic@3.11.1':
     resolution: {integrity: sha512-SrjsU+gvhjoPKelc4YSeC2AQ0lhwLiDWMO7fW83CVitCF8iWXpBSeVCI5SxtPeZNKTZ1ZCc3lIQCeEHOC/gP0g==}
@@ -3268,6 +3279,24 @@ packages:
   zod@4.1.12:
     resolution: {integrity: sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ==}
 
+  zustand@5.0.9:
+    resolution: {integrity: sha512-ALBtUj0AfjJt3uNRQoL1tL2tMvj6Gp/6e39dnfT6uzpelGru8v1tPOGBzayOWbPJvujM8JojDk3E1LxeFisBNg==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@types/react': '>=18.0.0'
+      immer: '>=9.0.6'
+      react: '>=18.0.0'
+      use-sync-external-store: '>=1.2.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      immer:
+        optional: true
+      react:
+        optional: true
+      use-sync-external-store:
+        optional: true
+
 snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
@@ -4455,6 +4484,10 @@ snapshots:
     dependencies:
       '@tiptap/core': 3.11.1(@tiptap/pm@3.11.1)
       '@tiptap/pm': 3.11.1
+
+  '@tiptap/extension-image@3.11.1(@tiptap/core@3.11.1(@tiptap/pm@3.11.1))':
+    dependencies:
+      '@tiptap/core': 3.11.1(@tiptap/pm@3.11.1)
 
   '@tiptap/extension-italic@3.11.1(@tiptap/core@3.11.1(@tiptap/pm@3.11.1))':
     dependencies:
@@ -6681,3 +6714,9 @@ snapshots:
       zod: 4.1.12
 
   zod@4.1.12: {}
+
+  zustand@5.0.9(@types/react@19.2.5)(react@19.2.0)(use-sync-external-store@1.6.0(react@19.2.0)):
+    optionalDependencies:
+      '@types/react': 19.2.5
+      react: 19.2.0
+      use-sync-external-store: 1.6.0(react@19.2.0)

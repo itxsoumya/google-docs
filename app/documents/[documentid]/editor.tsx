@@ -4,8 +4,40 @@ import { useEditor, EditorContent } from "@tiptap/react"
 import StarterKit from '@tiptap/starter-kit'
 import { styleText } from 'util'
 import { TaskItem, TaskList } from '@tiptap/extension-list'
+import { TableKit } from '@tiptap/extension-table'
+import TipTapImage from '@tiptap/extension-image'
+import { useEditorStore } from '@/store/use-editor-store'
+
+
+
+
 function Editor() {
+    const { setEditor } = useEditorStore()
     const editor = useEditor({
+        onCreate({ editor }) {
+            setEditor(editor)
+        },
+        onDestroy(){
+            setEditor(null)
+        },
+        onSelectionUpdate({editor}){
+            setEditor(editor)
+        },
+        onUpdate({editor}){
+            setEditor(editor)
+        },
+        onTransaction({editor}){
+            setEditor(editor)
+        },
+        onFocus({editor}){
+            setEditor(editor)
+        },
+        onBlur({editor}){
+            setEditor(editor)
+        },
+        onContentError({editor}){
+            setEditor(editor)
+        },
         editorProps: {
             attributes: {
                 class: "focus:outline-none print:border-0 bg-white border border-[#C7C7C7] flex flex-col min-h-[1054px] w-[816px] pt-10 pr-14 pb-10 cursor-text",
@@ -16,8 +48,26 @@ function Editor() {
             TaskItem.configure({
                 nested: true
             }),
-            TaskList],
-        content: '<p>Hello world!</p>',
+            TaskList,
+            TableKit,
+            TipTapImage,
+        ],
+        content: `
+        <table>
+          <tbody>
+            <tr>
+              <th>Name</th>
+              <th colspan="3">Description</th>
+            </tr>
+            <tr>
+              <td>Cyndi Lauper</td>
+              <td>Singer</td>
+              <td>Songwriter</td>
+              <td>Actress</td>
+            </tr>
+          </tbody>
+        </table>
+        `,
         immediatelyRender: false,
     });
 
