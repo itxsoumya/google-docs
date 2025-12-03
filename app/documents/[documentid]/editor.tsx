@@ -7,6 +7,9 @@ import { TaskItem, TaskList } from '@tiptap/extension-list'
 import { TableKit } from '@tiptap/extension-table'
 import TipTapImage from '@tiptap/extension-image'
 import { useEditorStore } from '@/store/use-editor-store'
+import { TextStyle, FontFamily } from '@tiptap/extension-text-style'
+
+import { cn } from '@/lib/utils'
 
 
 
@@ -51,6 +54,9 @@ function Editor() {
             TaskList,
             TableKit,
             TipTapImage,
+            FontFamily,
+            TextStyle,
+
         ],
         content: `
         <table>
@@ -80,5 +86,7 @@ function Editor() {
         </div>
     )
 }
+
+
 
 export default Editor
