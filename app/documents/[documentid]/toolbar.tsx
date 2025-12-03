@@ -2,7 +2,7 @@
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/use-editor-store";
-import { BoldIcon, ItalicIcon, LucideIcon, PrinterIcon, Redo2Icon, SpellCheckIcon, UnderlineIcon, Undo2Icon } from "lucide-react";
+import { BoldIcon, ItalicIcon, ListTodoIcon, LucideIcon, MessageSquarePlusIcon, PrinterIcon, Redo2Icon, RemoveFormattingIcon, SpellCheckIcon, UnderlineIcon, Undo2Icon } from "lucide-react";
 
 
 interface ToolBarButtonProps {
@@ -61,21 +61,43 @@ function ToolBar() {
                 {
                     label: "Bold",
                     icon: BoldIcon,
-                    isActive:editor?.isActive("bold"),
+                    isActive: editor?.isActive("bold"),
                     onClick: () => editor?.chain().focus().toggleBold().run()
                 },
                 {
                     label: "Italic",
                     icon: ItalicIcon,
-                    isActive:editor?.isActive("italic"),
+                    isActive: editor?.isActive("italic"),
                     onClick: () => editor?.chain().focus().toggleItalic().run()
                 },
                 {
                     label: "Underline",
                     icon: UnderlineIcon,
-                    isActive:editor?.isActive("underline"),
+                    isActive: editor?.isActive("underline"),
                     onClick: () => editor?.chain().focus().toggleUnderline().run()
                 },
+
+            ],
+            [
+                {
+                    label: "Comment",
+                    icon: MessageSquarePlusIcon,
+                    onClick: () => console.log("todo: comment"),
+                    isActive: false
+                },
+                {
+                    label: "List Todo",
+                    icon: ListTodoIcon,
+                    onClick: () => editor?.chain().focus().toggleTaskList().run(),
+                    isActive: editor?.isActive('taskList')
+                },
+                {
+                    label: "Remove Formatting",
+                    icon: RemoveFormattingIcon,
+                    onClick: () => editor?.chain().focus().unsetAllMarks().run(),
+                    isActive: false
+                },
+
             ]
         ];
     return (
@@ -87,12 +109,16 @@ function ToolBar() {
             {/* <Separator orientation="vertical" className="h-6 bg-neutral-300" /> 
        */}
 
-        <CustomSeparator/>
+            <CustomSeparator />
 
-        {sections[1].map((item)=>(
-            <ToolBarButton key={item.label} {...item} />
-        ))}
+            {sections[1].map((item) => (
+                <ToolBarButton key={item.label} {...item} />
+            ))}
+            <CustomSeparator />
 
+            {sections[2].map((item) => (
+                <ToolBarButton key={item.label} {...item} />
+            ))}
         </div>
     )
 }
