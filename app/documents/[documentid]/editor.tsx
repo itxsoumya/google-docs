@@ -7,7 +7,8 @@ import { TaskItem, TaskList } from '@tiptap/extension-list'
 import { TableKit } from '@tiptap/extension-table'
 import TipTapImage from '@tiptap/extension-image'
 import { useEditorStore } from '@/store/use-editor-store'
-import { TextStyle, FontFamily } from '@tiptap/extension-text-style'
+import { TextStyle, FontFamily, Color } from '@tiptap/extension-text-style'
+import Highlight from '@tiptap/extension-highlight'
 
 import { cn } from '@/lib/utils'
 
@@ -56,6 +57,10 @@ function Editor() {
             TipTapImage,
             FontFamily,
             TextStyle,
+            Color,
+            Highlight.configure({
+                multicolor:true,
+            }),
 
         ],
         content: `

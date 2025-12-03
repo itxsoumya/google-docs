@@ -4,13 +4,46 @@ import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/use-editor-store";
 import { BoldIcon, ItalicIcon, ListTodoIcon, LucideIcon, MessageSquarePlusIcon, PrinterIcon, Redo2Icon, RemoveFormattingIcon, SpellCheckIcon, UnderlineIcon, Undo2Icon } from "lucide-react";
 import { ChevronDownIcon } from 'lucide-react'
-import {type Level} from "@tiptap/extension-heading"
+import { type Level } from "@tiptap/extension-heading"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu'
+import { type ColorResult, CirclePicker, SketchPicker } from "react-color";
+
 
 interface ToolBarButtonProps {
     onClick?: () => void;
     isActive?: boolean;
     icon: LucideIcon;
+}
+
+
+const TextColorButton = () => {
+    const { editor } = useEditorStore();
+    const value = editor?.getAttributes('textStyle').color || '#000000';
+
+    const onChange = (color: ColorResult) => {
+        editor?.chain().focus().setColor(color.hex).run();
+    }
+
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <button className="h-7 flex-col min-w-7 shrink-0 flex items-center justify-center rounded-sm hover:bg-neutral-200/80 px 1.5 overflow-hidden  text-sm px-1">
+                    <span className="text-xs" >A</span>
+                    <div className="h-0.5 w-full" style={{ backgroundColor: value }} />
+                </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="p-0 z-50 bg-zinc-50 shadow rounded-md">
+                <SketchPicker
+                    color={value}
+                    onChange={onChange}
+                >
+
+                </SketchPicker>
+
+            </DropdownMenuContent>
+        </DropdownMenu>
+    )
+
 }
 
 export const FontFamilyButton = () => {
@@ -110,11 +143,11 @@ const HeadingLevelButton = () => {
                             "flex items-center gap-x-2 px-2 py-1 rounded-sm hover:bg-neutral-200/80 ",
                             (value === 0 && !editor?.isActive('heading')) || (editor?.isActive('heading', { level: value })) && "bg-neutral-200/80"
                         )}
-                        onClick={()=>{
-                            if(value===0){
+                        onClick={() => {
+                            if (value === 0) {
                                 editor?.chain().focus().setParagraph().run()
-                            }else{
-                                editor?.chain().focus().toggleHeading({level:value as Level}).run()
+                            } else {
+                                editor?.chain().focus().toggleHeading({ level: value as Level }).run()
                             }
                         }}
                     >
@@ -226,8 +259,10 @@ function ToolBar() {
             <CustomSeparator />
             <FontFamilyButton />
             <CustomSeparator />
-            <HeadingLevelButton/>
-            <CustomSeparator/>
+            <HeadingLevelButton />
+            <CustomSeparator />
+            <TextColorButton />
+            <CustomSeparator />
 
             {sections[1].map((item) => (
                 <ToolBarButton key={item.label} {...item} />
