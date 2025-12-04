@@ -9,7 +9,7 @@ import TipTapImage from '@tiptap/extension-image'
 import { useEditorStore } from '@/store/use-editor-store'
 import { TextStyle, FontFamily, Color } from '@tiptap/extension-text-style'
 import Highlight from '@tiptap/extension-highlight'
-
+import TipTapLink from '@tiptap/extension-link'
 import { cn } from '@/lib/utils'
 
 
@@ -61,6 +61,11 @@ function Editor() {
             Highlight.configure({
                 multicolor:true,
             }),
+            TipTapLink.configure({
+                openOnClick:false,
+                autolink:true,
+                defaultProtocol:"https"
+            })
 
         ],
         content: `

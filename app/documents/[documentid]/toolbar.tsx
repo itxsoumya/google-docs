@@ -2,17 +2,54 @@
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/use-editor-store";
-import { BoldIcon, ItalicIcon, ListTodoIcon, LucideIcon, MessageSquarePlusIcon, PrinterIcon, Redo2Icon, RemoveFormattingIcon, SpellCheckIcon, UnderlineIcon, Undo2Icon } from "lucide-react";
+import { BoldIcon, HighlighterIcon, ItalicIcon, Link2Icon, ListTodoIcon, LucideIcon, MessageSquarePlusIcon, PrinterIcon, Redo2Icon, RemoveFormattingIcon, SpellCheckIcon, UnderlineIcon, Undo2Icon } from "lucide-react";
 import { ChevronDownIcon } from 'lucide-react'
 import { type Level } from "@tiptap/extension-heading"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu'
 import { type ColorResult, CirclePicker, SketchPicker } from "react-color";
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 
 interface ToolBarButtonProps {
     onClick?: () => void;
     isActive?: boolean;
     icon: LucideIcon;
+}
+
+const LinkButton = () => {
+    const { editor } = useEditorStore();
+    const [value, setValue] = useState(editor?.getAttributes('link').href || "");
+
+    const onChange = (href: string) => {
+        editor?.chain().focus().extendMarkRange("link").setLink({ href }).run();
+        setValue("");
+    }
+
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <button className="h-7 flex-col min-w-7 shrink-0 flex items-center justify-center rounded-sm hover:bg-neutral-200/80 px 1.5 overflow-hidden  text-sm px-1">
+                    <Link2Icon className="size-4" />
+                </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="p-1 flex items-center gap-x-2 z-50 bg-zinc-50 shadow rounded-md">
+
+                <Input
+                    placeholder="https://example.com"
+                    value={value}
+                    onChange={e => setValue(e.target.value)}
+                />
+                <Button
+                    onClick={() => onChange(value)}
+                >Apply</Button>
+
+            </DropdownMenuContent>
+        </DropdownMenu>
+    )
+
+
 }
 
 
@@ -39,6 +76,38 @@ const TextColorButton = () => {
                 >
 
                 </SketchPicker>
+
+            </DropdownMenuContent>
+        </DropdownMenu>
+    )
+
+}
+
+const HighlightColorButton = () => {
+    const { editor } = useEditorStore();
+
+    const value = editor?.getAttributes('highlight').color || "#FFFFFFFF";
+
+
+
+    const onChange = (color: ColorResult) => {
+        editor?.chain().focus().setHighlight({ color: color.hex }).run();
+    }
+
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <button className="h-7 flex-col min-w-7 shrink-0 flex items-center justify-center rounded-sm hover:bg-neutral-200/80 px 1.5 overflow-hidden  text-sm px-1">
+                    <HighlighterIcon className="size-4" />
+                </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="p-0 z-50 bg-zinc-50 shadow rounded-md">
+                <SketchPicker
+
+                    onChange={onChange}
+                    color={value}
+                />
+
 
             </DropdownMenuContent>
         </DropdownMenu>
@@ -261,17 +330,19 @@ function ToolBar() {
             <CustomSeparator />
             <HeadingLevelButton />
             <CustomSeparator />
-            <TextColorButton />
-            <CustomSeparator />
-
             {sections[1].map((item) => (
                 <ToolBarButton key={item.label} {...item} />
             ))}
-            <CustomSeparator />
 
+            <TextColorButton />
+            <HighlightColorButton />
+            <CustomSeparator />
+            <LinkButton/>
             {sections[2].map((item) => (
                 <ToolBarButton key={item.label} {...item} />
             ))}
+
+
         </div>
     )
 }
