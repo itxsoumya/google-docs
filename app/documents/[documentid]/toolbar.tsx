@@ -2,7 +2,7 @@
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/use-editor-store";
-import { BoldIcon, HighlighterIcon, ItalicIcon, Link2Icon, ListTodoIcon, LucideIcon, MessageSquarePlusIcon, PrinterIcon, Redo2Icon, RemoveFormattingIcon, SpellCheckIcon, UnderlineIcon, Undo2Icon } from "lucide-react";
+import { BoldIcon, HighlighterIcon, ImageIcon, ItalicIcon, Link2Icon, ListTodoIcon, LucideIcon, MessageSquarePlusIcon, PrinterIcon, Redo2Icon, RemoveFormattingIcon, SearchIcon, SpellCheckIcon, UnderlineIcon, Undo2Icon, UploadIcon } from "lucide-react";
 import { ChevronDownIcon } from 'lucide-react'
 import { type Level } from "@tiptap/extension-heading"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu'
@@ -10,12 +10,110 @@ import { type ColorResult, CirclePicker, SketchPicker } from "react-color";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { Dialog, DialogFooter, DialogHeader } from "@/components/ui/dialog";
+import { DialogContent, DialogTitle } from "@radix-ui/react-dialog";
 
 
 interface ToolBarButtonProps {
     onClick?: () => void;
     isActive?: boolean;
     icon: LucideIcon;
+}
+
+const ImageButton = () => {
+    const { editor } = useEditorStore();
+    const [imageUrl, setImageUrl] = useState("");
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+
+    const onChange = (src: string) => {
+        editor?.chain().focus().setImage({ src }).run();
+
+    }
+
+    const onUpload = () => {
+        const input = document.createElement('input')
+        input.type = 'file';
+        input.accept = 'image/*';
+
+        input.onchange = (e) => {
+            const file = (e.target as HTMLInputElement).files?.[0];
+
+            if (file) {
+                const iUrl = URL.createObjectURL(file);
+                onChange(iUrl);
+            }
+        }
+
+        input.click();
+    };
+
+    const handleImageUrlSumbit = () => {
+        if (imageUrl) {
+            onChange(imageUrl);
+            setImageUrl("");
+            setIsDialogOpen(false);
+
+        }
+    };
+
+
+    return (
+        <>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <button className="h-7 flex-col min-w-7 shrink-0 flex items-center justify-center rounded-sm hover:bg-neutral-200/80 px 1.5 overflow-hidden  text-sm px-1">
+                        <ImageIcon className="size-4" />
+                    </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="z-50 bg-zinc-50 p-1 shadow rounded-md">
+
+                    <DropdownMenuItem onClick={onUpload}>
+                        <UploadIcon className="size-4 mr-2" />
+                        Upload
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setIsDialogOpen(true)}>
+                        <SearchIcon className="size-4 mr-2" />
+                        Paste image url
+                    </DropdownMenuItem>
+
+
+                </DropdownMenuContent>
+            </DropdownMenu>
+
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>
+                            Insert image URL
+                        </DialogTitle>
+                    </DialogHeader>
+                    <Input
+                        placeholder="Insert image URL"
+                        value={imageUrl}
+                        onChange={(e) => setImageUrl(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                handleImageUrlSumbit();
+                            }
+                        }}
+                    />
+
+                    <DialogFooter>
+                        <Button onClick={handleImageUrlSumbit}>
+                            Insert
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+
+
+            </Dialog>
+        </>
+    )
+
+
 }
 
 const LinkButton = () => {
@@ -26,17 +124,17 @@ const LinkButton = () => {
         editor?.chain().focus().extendMarkRange("link").setLink({ href }).run();
         setValue("");
     }
- 
+
     return (
         <DropdownMenu
-        onOpenChange={(open)=>{
-            if(open){
-                setValue(editor?.getAttributes('link').href || "");
-            }
-        }}
+            onOpenChange={(open) => {
+                if (open) {
+                    setValue(editor?.getAttributes('link').href || "");
+                }
+            }}
         >
             <DropdownMenuTrigger asChild>
-                <button  className="h-7 flex-col min-w-7 shrink-0 flex items-center justify-center rounded-sm hover:bg-neutral-200/80 px 1.5 overflow-hidden  text-sm px-1">
+                <button className="h-7 flex-col min-w-7 shrink-0 flex items-center justify-center rounded-sm hover:bg-neutral-200/80 px 1.5 overflow-hidden  text-sm px-1">
                     <Link2Icon className="size-4" />
                 </button>
             </DropdownMenuTrigger>
@@ -343,7 +441,8 @@ function ToolBar() {
             <TextColorButton />
             <HighlightColorButton />
             <CustomSeparator />
-            <LinkButton/>
+            <LinkButton />
+            <ImageButton />
             {sections[2].map((item) => (
                 <ToolBarButton key={item.label} {...item} />
             ))}
