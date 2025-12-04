@@ -26,11 +26,17 @@ const LinkButton = () => {
         editor?.chain().focus().extendMarkRange("link").setLink({ href }).run();
         setValue("");
     }
-
+ 
     return (
-        <DropdownMenu>
+        <DropdownMenu
+        onOpenChange={(open)=>{
+            if(open){
+                setValue(editor?.getAttributes('link').href || "");
+            }
+        }}
+        >
             <DropdownMenuTrigger asChild>
-                <button className="h-7 flex-col min-w-7 shrink-0 flex items-center justify-center rounded-sm hover:bg-neutral-200/80 px 1.5 overflow-hidden  text-sm px-1">
+                <button  className="h-7 flex-col min-w-7 shrink-0 flex items-center justify-center rounded-sm hover:bg-neutral-200/80 px 1.5 overflow-hidden  text-sm px-1">
                     <Link2Icon className="size-4" />
                 </button>
             </DropdownMenuTrigger>
